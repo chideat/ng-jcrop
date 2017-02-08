@@ -98,11 +98,10 @@
 
         return {
             restrict: 'A',
-            scope: { ngJcrop: '=', thumbnail: '=', selection: '=', ngJcropConfigName: '@' },
+            scope: { ngJcrop: '=', thumbnail: '=', selection: '=', ngJcropConfigName: '@', ngJcropConfig: '=' },
             template: ngJcropConfig.template,
             controller: 'JcropController'
         };
-
     }])
 
     .directive('ngJcropInput', function(){
@@ -156,7 +155,7 @@
     }])
 
     .controller('JcropController', ['$scope', '$element', 'ngJcropConfig',
-    function($scope, $element, ngJcropConfig){
+    function($scope, $element, ngJcropConfig) {
         if (!$scope.ngJcropConfigName) {
             $scope.ngJcropConfigName = 'default';
         }
@@ -166,6 +165,9 @@
         if (!ngJcropConfig) {
             throw new Error('Unknown "{name}" config name'.replace('{name}', $scope.ngJcropConfigName));
         }
+
+        // merge config
+        ngJcropConfig = angular.merge(ngJcropConfig, $scope.ngJcropConfig || {})
 
         /* Checking the mandatory attributes */
         if( angular.isUndefined($scope.selection) ){
